@@ -6,7 +6,7 @@ void insert(int* heap, int &size, int item, int priority, int num_vertices){
 	int count = size;
 	int temp;
 
-	//increase the size of the heap and insert the shit there
+	//increase the size of the heap and insert the stuffs there
 	heap[size] = priority;
 	heap[num_vertices + size] = item;
 	size++;
