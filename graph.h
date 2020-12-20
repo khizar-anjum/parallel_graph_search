@@ -1,3 +1,6 @@
+#ifndef GRAPH__H
+#define GRAPH__H
+
 #include <map>
 #include <vector>
 #include <sstream>
@@ -137,3 +140,4 @@ void graph::print_connected_weights(int vertex){
 	}
 	printf("\n");
 }
+#endif

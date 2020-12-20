@@ -1,4 +1,5 @@
 #include "pqueue.h"
+#include <cstdio>
 
 void insert(int* heap, int &size, int item, int priority, int num_vertices){
 	int parent = 0;
@@ -219,4 +220,16 @@ void print_queue(int* heap, int &size, int num_vertices){
 	for(int j = 0; j < size; j++)
 		printf("%d->%d ", heap[j], heap[j+num_vertices]);
 	printf("\n");
+}
+
+void getItem(int* heap, int size, int item, int& index, int& priority, int num_vertices){
+	for(int j = 0; j < size; j++){
+		if(heap[num_vertices + j] == item){
+			index = j;
+			priority = heap[j];
+			return;
+		}
+	}
+	index = -1;
+	return;
 }

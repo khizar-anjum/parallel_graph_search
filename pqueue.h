@@ -1,3 +1,6 @@
+#ifndef PQUEUE__H
+#define PQUEUE__H
+
 /*	
 	THIS FILE PROVIDES FUNCTIONS TO IMPLEMENT A PRIORITY_QUEUE
 	this file works on an int array which is supposed to be heapified
@@ -17,6 +20,9 @@
 		
 void insert(int* heap, int &size, int item, int priority, int num_vertices);
 void remove(int* heap, int &size, int index, int num_vertices);
+void getItem(int* heap, int size, int item, int& index, int& priority, int num_vertices);
 void makeHeap(int* heap, int&size, int num_vertices);
 void ExtractMin(int* heap, int &size, int& item, int& priority, int num_vertices);
 void print_queue(int* heap, int &size, int num_vertices);
+
+#endif
