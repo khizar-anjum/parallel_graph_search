@@ -1,7 +1,8 @@
 #include "graph.h"
 #include "pqueue.h"
 
-std::vector<int> astar(graph &g, int src, int dst, int &cost){
+std::vector<int> astar_seq(graph &g, int src, int dst, int &cost, int (*h)(int)){
+	// here h is the heuristic function
 	// initialize heap and its size
 	int* heap = new int[2*g.num_vertices];
 	int size = 0;
@@ -24,13 +25,14 @@ std::vector<int> astar(graph &g, int src, int dst, int &cost){
 	bool visited[g.num_vertices] = {false}; //visited flags for vertices
 	int prev[g.num_vertices] = {0}; //used for backtracking at the end
 
-	insert(heap, size, src_vertex, 0, g.num_vertices);
+	insert(heap, size, src_vertex, (*h)(src_vertex), g.num_vertices);
 	prev[src_vertex] = src_vertex;
 	
 	//Now, extracting mins and carrying on till we find the destination!
 	while(1){
 		//Extracting min and pulling the corresponding vertex into cloud
 		ExtractMin(heap, size, current_vertex, current_weight, g.num_vertices);
+		current_weight -= (*h)(current_vertex);
 		visited[current_vertex] = true;
 		//	current->prev = source;
 		//	cout << "current is " << current->name << " its dist is " << current->dist << endl;
@@ -46,13 +48,13 @@ std::vector<int> astar(graph &g, int src, int dst, int &cost){
 				// if not visited, lets see if we can update the distance
 				getItem(heap, size, next_vertex, next_pq_index, next_weight, g.num_vertices);
 				if(next_pq_index == -1){ //if not found in pqueue
-					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i];
+					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i] + (*h)(next_vertex);
 					insert(heap, size, next_vertex, next_weight, g.num_vertices);
 					prev[next_vertex] = current_vertex;
 				}
 				else if(next_weight > current_weight + g.weight_arr[g.index_arr[current_vertex] + i]){
 					// if found but a better weight available
-					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i];
+					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i] + (*h)(next_weight);
 					// remove the old entry and add new one 
 					remove(heap, size, next_pq_index, g.num_vertices);
 					insert(heap, size, next_vertex, next_weight, g.num_vertices);
