@@ -228,3 +228,9 @@ __device__ void getItem_GPU(int* heap, int size, int item, int& index, int& prio
 	index = -1;
 	return;
 }
+
+__device__ void print_queue_GPU(int* heap, int &size, int num_vertices){
+	for(int j = 0; j < size; j++)
+		printf("%d->%d ", heap[j], heap[j+num_vertices]);
+	printf("\n");
+}
