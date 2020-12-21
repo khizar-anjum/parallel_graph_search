@@ -1,7 +1,6 @@
-#include "pqueue.h"
-#include <cstdio>
+#include "pqueue.cuh"
 
-void insert(int* heap, int &size, int item, int priority, int num_vertices){
+__device__ void insert_GPU(int* heap, int &size, int item, int priority, int num_vertices){
 	int parent = 0;
 	int count = size;
 	int temp;
@@ -39,9 +38,8 @@ void insert(int* heap, int &size, int item, int priority, int num_vertices){
 	}
 }
 
-void remove(int* heap, int &size, int index, int num_vertices){
+__device__ void remove_GPU(int* heap, int &size, int index, int num_vertices){
 	if(size < 1) return;
-	int parent = 0;
 	int leftchild = 0;
 	int count = 0;
 	int temp;
@@ -90,7 +88,7 @@ void remove(int* heap, int &size, int index, int num_vertices){
 	}
 }
 
-void makeHeap(int* heap, int&size, int num_vertices){
+__device__ void makeHeap_GPU(int* heap, int&size, int num_vertices){
 	int count = size - 1;
 	bool isleft = false;
 	int subcount = 0;
@@ -211,21 +209,15 @@ void makeHeap(int* heap, int&size, int num_vertices){
 	}
 }
 
-void ExtractMin(int* heap, int &size, int& item, int& priority, int num_vertices){
+__device__ void ExtractMin_GPU(int* heap, int &size, int& item, int& priority, int num_vertices){
 	if(size > 0){
 		priority = heap[0];
 		item = heap[num_vertices];
-		remove(heap, size, 0, num_vertices);
+		remove_GPU(heap, size, 0, num_vertices);
 	}
 }
 
-void print_queue(int* heap, int &size, int num_vertices){
-	for(int j = 0; j < size; j++)
-		printf("%d->%d ", heap[j], heap[j+num_vertices]);
-	printf("\n");
-}
-
-void getItem(int* heap, int size, int item, int& index, int& priority, int num_vertices){
+__device__ void getItem_GPU(int* heap, int size, int item, int& index, int& priority, int num_vertices){
 	for(int j = 0; j < size; j++){
 		if(heap[num_vertices + j] == item){
 			index = j;

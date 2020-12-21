@@ -23,16 +23,17 @@ int* bellmanford_par(graph &g, int src){
 
 	int* weight_arr_d; int* connected_to_d; int* connected_from_d; int* costs_d;
 	size_t bytes = g.num_edges * sizeof(int);
+	size_t vbytes = g.num_vertices * sizeof(int);
 	cudaMalloc(&weight_arr_d, bytes);
 	cudaMalloc(&connected_to_d, bytes);
 	cudaMalloc(&connected_from_d, bytes);
-	cudaMalloc(&costs_d, bytes);
+	cudaMalloc(&costs_d, vbytes); //
 
 	//lets copy all the stuff from device memory to host memory
 	cudaMemcpy(weight_arr_d, g.weight_arr, bytes, cudaMemcpyHostToDevice);
 	cudaMemcpy(connected_to_d, g.connected_to, bytes, cudaMemcpyHostToDevice);
 	cudaMemcpy(connected_from_d, connected_from, bytes, cudaMemcpyHostToDevice);
-	cudaMemcpy(costs_d, costs, bytes, cudaMemcpyHostToDevice);
+	cudaMemcpy(costs_d, costs, vbytes, cudaMemcpyHostToDevice);
 
 	int BLOCK_SIZE = 256;
 	int GRID_SIZE = 1;
@@ -46,7 +47,7 @@ int* bellmanford_par(graph &g, int src){
 	checkNegativeCycle_kernel <<< GRID_SIZE, BLOCK_SIZE >>> (weight_arr_d, connected_to_d, connected_from_d, costs_d, g.num_edges);
 	cudaDeviceSynchronize();
 	
-	cudaMemcpy(costs, costs_d, bytes, cudaMemcpyDeviceToHost);
+	cudaMemcpy(costs, costs_d, vbytes, cudaMemcpyDeviceToHost);
 	if(costs[0] == -1){ // Error checking
 		throw std::logic_error( "Graph contains a negative-weight cycle" );
 	}
@@ -58,11 +59,10 @@ int* bellmanford_par(graph &g, int src){
 __global__ void bellmanFord_kernel(int* weight_arr_d, int* connected_to_d, int* connected_from_d, int* costs_d, int num_edges){
 	int index = threadIdx.x + blockDim.x * blockIdx.x;
 	int stride = blockDim.x * gridDim.x;
-
 	//Run through every edge and update the distances!
 	for(int i = index; i < num_edges; i+=stride){
 		//lets see if we can update this
-		// printf("%d\n", costs_d[connected_to_d[i]]);
+		//printf("%d\n", costs_d[connected_to_d[i]]);
 		if(costs_d[connected_to_d[i]] > weight_arr_d[i] + costs_d[connected_from_d[i]]){
 			atomicExch(&costs_d[connected_to_d[i]], weight_arr_d[i] + costs_d[connected_from_d[i]]);
 		}

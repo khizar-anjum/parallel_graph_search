@@ -1,5 +1,5 @@
-#ifndef PQUEUE__H
-#define PQUEUE__H
+#ifndef PQUEUE__CUH
+#define PQUEUE__CUH
 
 /*
 	THIS FILE PROVIDES FUNCTIONS TO IMPLEMENT A PRIORITY_QUEUE
@@ -17,12 +17,11 @@
 
 	I did not create a class for this to facilitate parallelization in CUDA
 */
-		
-void insert(int* heap, int &size, int item, int priority, int num_vertices);
-void remove(int* heap, int &size, int index, int num_vertices);
-void getItem(int* heap, int size, int item, int& index, int& priority, int num_vertices);
-void makeHeap(int* heap, int&size, int num_vertices);
-void ExtractMin(int* heap, int &size, int& item, int& priority, int num_vertices);
-void print_queue(int* heap, int &size, int num_vertices);
+
+__device__ void ExtractMin_GPU(int* heap, int &size, int& item, int& priority, int num_vertices);		
+__device__ void insert_GPU(int* heap, int &size, int item, int priority, int num_vertices);
+__device__ void remove_GPU(int* heap, int &size, int index, int num_vertices);
+__device__ void getItem_GPU(int* heap, int size, int item, int& index, int& priority, int num_vertices);
+__device__ void makeHeap_GPU(int* heap, int&size, int num_vertices);
 
 #endif
