@@ -234,3 +234,7 @@ __device__ void print_queue_GPU(int* heap, int &size, int num_vertices){
 		printf("%d->%d ", heap[j], heap[j+num_vertices]);
 	printf("\n");
 }
+
+__device__ int heuristic_GPU(int a){
+	return 0;
+}

@@ -24,5 +24,6 @@ __device__ void remove_GPU(int* heap, int &size, int index, int num_vertices);
 __device__ void getItem_GPU(int* heap, int size, int item, int& index, int& priority, int num_vertices);
 __device__ void makeHeap_GPU(int* heap, int&size, int num_vertices);
 __device__ void print_queue_GPU(int* heap, int &size, int num_vertices);
+__device__ int heuristic_GPU(int a);
 
 #endif
