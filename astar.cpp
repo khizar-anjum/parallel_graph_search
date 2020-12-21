@@ -1,6 +1,67 @@
 #include "graph.h"
 #include "pqueue.h"
 
+int* astar_seq(graph &g, int src, int (*h)(int)){
+	// starts at the source and calculates the distance for all the 
+	// vertices inside the graph
+	// here h is the heuristic function
+	// initialize heap and its size
+	int* heap = new int[2*g.num_vertices];
+	int* costs = new int[g.num_vertices];
+	int size = 0;
+
+	// check if src exists and populate it
+	std::map<int, int>::iterator it = g.name_to_vertex.find(src);
+	if(it == g.name_to_vertex.end()) throw std::invalid_argument( "Invalid vertex name" );
+	int src_vertex = it->second;
+
+	int current_vertex; //current vertex being explored
+	int current_weight; //current weight
+	int next_vertex; //next vertex to explore
+	int next_weight; //next weight
+	int next_pq_index; //next vertex index in priority queue
+	bool visited[g.num_vertices] = {false}; //visited flags for vertices
+
+	insert(heap, size, src_vertex, (*h)(src_vertex), g.num_vertices);
+	
+	//Now, extracting mins and carrying on till we find the destination!
+	while(1){
+		//Extracting min and pulling the corresponding vertex into cloud
+		ExtractMin(heap, size, current_vertex, current_weight, g.num_vertices);
+		current_weight -= (*h)(current_vertex);
+		costs[current_vertex] = current_weight;
+		visited[current_vertex] = true;
+
+		//Run through every edge and update the distances!
+		for(int i = 0; i < g.num_connected[current_vertex]; i++){
+			next_vertex = g.connected_to[g.index_arr[current_vertex] + i];
+			if(!visited[next_vertex]){
+				// if not visited, lets see if we can update the distance
+				getItem(heap, size, next_vertex, next_pq_index, next_weight, g.num_vertices);
+				if(next_pq_index == -1){ //if not found in pqueue
+					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i] + (*h)(next_vertex);
+					insert(heap, size, next_vertex, next_weight, g.num_vertices);
+				}
+				else if(next_weight > current_weight + g.weight_arr[g.index_arr[current_vertex] + i]){
+					// if found but a better weight available
+					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i] + (*h)(next_vertex);
+					// remove the old entry and add new one 
+					remove(heap, size, next_pq_index, g.num_vertices);
+					insert(heap, size, next_vertex, next_weight, g.num_vertices);
+				}
+			}
+		}
+
+		//Store current into source (which is prev)!!
+		if(size < 1){
+			return costs;
+		}
+	}
+
+	return costs;
+}
+
+
 std::vector<int> astar_seq(graph &g, int src, int dst, int &cost, int (*h)(int)){
 	// here h is the heuristic function
 	// initialize heap and its size
@@ -159,4 +220,63 @@ std::vector<int> dijkstra(graph &g, int src, int dst, int &cost){
 	fullpath.push_back(g.vertex_to_name.at(current_vertex));
 
 	return fullpath;
+}
+
+
+int* dijkstra(graph &g, int src){
+	// starts at the source and calculates the distance for all the 
+	// vertices inside the graph
+	int* heap = new int[2*g.num_vertices];
+	int size = 0;
+	int* costs = new int[g.num_vertices];
+
+	// check if src exists and populate it
+	std::map<int, int>::iterator it = g.name_to_vertex.find(src);
+	if(it == g.name_to_vertex.end()) throw std::invalid_argument( "Invalid vertex name" );
+	int src_vertex = it->second;
+
+	int current_vertex; //current vertex being explored
+	int current_weight; //current weight
+	int next_vertex; //next vertex to explore
+	int next_weight; //next weight
+	int next_pq_index; //next vertex index in priority queue
+	bool visited[g.num_vertices] = {false}; //visited flags for vertices
+	int prev[g.num_vertices] = {0}; //used for backtracking at the end
+
+	insert(heap, size, src_vertex, 0, g.num_vertices);
+	
+	//Now, extracting mins and carrying on till we find the destination!
+	while(1){
+		//Extracting min and pulling the corresponding vertex into cloud
+		ExtractMin(heap, size, current_vertex, current_weight, g.num_vertices);
+		visited[current_vertex] = true;
+		costs[current_vertex] = current_weight;
+
+		//Run through every edge and update the distances!
+		for(int i = 0; i < g.num_connected[current_vertex]; i++){
+			next_vertex = g.connected_to[g.index_arr[current_vertex] + i];
+			if(!visited[next_vertex]){
+				// if not visited, lets see if we can update the distance
+				getItem(heap, size, next_vertex, next_pq_index, next_weight, g.num_vertices);
+				if(next_pq_index == -1){ //if not found in pqueue
+					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i];
+					insert(heap, size, next_vertex, next_weight, g.num_vertices);
+				}
+				else if(next_weight > current_weight + g.weight_arr[g.index_arr[current_vertex] + i]){
+					// if found but a better weight available
+					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i];
+					// remove the old entry and add new one 
+					remove(heap, size, next_pq_index, g.num_vertices);
+					insert(heap, size, next_vertex, next_weight, g.num_vertices);
+				}
+			}
+		}
+
+		//Exit when all the vertices explored
+		if(size < 1){
+			return costs;
+		}
+	}
+
+	return costs;
 }
