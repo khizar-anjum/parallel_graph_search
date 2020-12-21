@@ -33,3 +33,5 @@ void BellmanFord(std::vector<std::pair<int, std::pair<int,int>> > graph, int sou
 		}
 	print_distance(distance);
 }
+
+Reference: https://iq.opengenus.org/bellman-ford-algorithm/#algorithm
