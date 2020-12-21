@@ -241,7 +241,6 @@ int* dijkstra(graph &g, int src){
 	int next_weight; //next weight
 	int next_pq_index; //next vertex index in priority queue
 	bool visited[g.num_vertices] = {false}; //visited flags for vertices
-	int prev[g.num_vertices] = {0}; //used for backtracking at the end
 
 	insert(heap, size, src_vertex, 0, g.num_vertices);
 	
