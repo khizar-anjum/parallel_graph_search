@@ -1,6 +1,6 @@
 #include "bellmanford.cuh"
 
-int* bellmanford_par(graph &g, int src){
+int* bellmanford_par(graph &g, int src, int BLOCK_SIZE, int GRID_SIZE){
 	// starts at the source and calculates the distance for all the 
 	// vertices inside the graph
 
@@ -34,9 +34,6 @@ int* bellmanford_par(graph &g, int src){
 	cudaMemcpy(connected_to_d, g.connected_to, bytes, cudaMemcpyHostToDevice);
 	cudaMemcpy(connected_from_d, connected_from, bytes, cudaMemcpyHostToDevice);
 	cudaMemcpy(costs_d, costs, vbytes, cudaMemcpyHostToDevice);
-
-	int BLOCK_SIZE = 256;
-	int GRID_SIZE = 1;
 
 	// lets start crunching
 	for(int j = 0; j < g.num_vertices ; j++){

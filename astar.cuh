@@ -7,7 +7,7 @@
 #include <device_launch_parameters.h>
 #include <cuda.h>
 
-int* astar_par(graph &g, int src);
+int* astar_par(graph &g, int src, int NUM_QUEUES);
 int* dijkstra_par(graph &g, int src);
 
 __global__ void insertKernelDijkstra(int* heap, int* size, int src_vertex, int priority, int num_vertices);

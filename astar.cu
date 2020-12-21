@@ -1,7 +1,7 @@
 #include "astar.cuh"
 #include "pqueue.cu"
 
-int* astar_par(graph &g, int src){
+int* astar_par(graph &g, int src, int NUM_QUEUES){
 	// starts at the source and calculates the distance for all the 
 	// vertices inside the graph
 
@@ -12,7 +12,6 @@ int* astar_par(graph &g, int src){
 
 	// initialize everything
 	bool finished = false;
-	int NUM_QUEUES = 1;
 	bool* visited = new bool[g.num_vertices];
 	int* costs = new int[g.num_vertices];
 	int* size_h = new int[NUM_QUEUES];
