@@ -1,7 +1,7 @@
 #ifndef PQUEUE__H
 #define PQUEUE__H
 
-/*	
+/*
 	THIS FILE PROVIDES FUNCTIONS TO IMPLEMENT A PRIORITY_QUEUE
 	this file works on an int array which is supposed to be heapified
 	These functions work by-reference on two main variables:

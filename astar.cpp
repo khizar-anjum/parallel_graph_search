@@ -54,7 +54,7 @@ std::vector<int> astar_seq(graph &g, int src, int dst, int &cost, int (*h)(int))
 				}
 				else if(next_weight > current_weight + g.weight_arr[g.index_arr[current_vertex] + i]){
 					// if found but a better weight available
-					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i] + (*h)(next_weight);
+					next_weight = current_weight + g.weight_arr[g.index_arr[current_vertex] + i] + (*h)(next_vertex);
 					// remove the old entry and add new one 
 					remove(heap, size, next_pq_index, g.num_vertices);
 					insert(heap, size, next_vertex, next_weight, g.num_vertices);
