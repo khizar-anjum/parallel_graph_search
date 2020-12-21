@@ -2,3 +2,5 @@ test.cpp
 a.out
 *.txt
 *.csv
+pg_search
+data/
