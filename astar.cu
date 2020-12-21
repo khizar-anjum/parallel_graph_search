@@ -1,6 +1,6 @@
-#include "astar.h"
+#include "astar.cuh"
 
-int* astar_seq(graph &g, int src, int (*h)(int)){
+int* astar_par(graph &g, int src, int (*h)(int)){
 	// starts at the source and calculates the distance for all the 
 	// vertices inside the graph
 	// here h is the heuristic function
@@ -61,7 +61,7 @@ int* astar_seq(graph &g, int src, int (*h)(int)){
 }
 
 
-std::vector<int> astar_seq(graph &g, int src, int dst, int &cost, int (*h)(int)){
+std::vector<int> astar_par(graph &g, int src, int dst, int &cost, int (*h)(int)){
 	// here h is the heuristic function
 	// initialize heap and its size
 	int* heap = new int[2*g.num_vertices];
@@ -143,7 +143,7 @@ std::vector<int> astar_seq(graph &g, int src, int dst, int &cost, int (*h)(int))
 
 
 
-std::vector<int> dijkstra_seq(graph &g, int src, int dst, int &cost){
+std::vector<int> dijkstra_par(graph &g, int src, int dst, int &cost){
 	// initialize heap and its size
 	int* heap = new int[2*g.num_vertices];
 	int size = 0;
@@ -222,7 +222,7 @@ std::vector<int> dijkstra_seq(graph &g, int src, int dst, int &cost){
 }
 
 
-int* dijkstra_seq(graph &g, int src){
+int* dijkstra_par(graph &g, int src){
 	// starts at the source and calculates the distance for all the 
 	// vertices inside the graph
 	int* heap = new int[2*g.num_vertices];

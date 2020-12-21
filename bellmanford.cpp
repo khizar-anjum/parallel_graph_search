@@ -1,5 +1,4 @@
-#include "graph.h"
-#include "pqueue.h"
+#include "bellmanford.h"
 
 int* bellmanford_seq(graph &g, int src){
 	// starts at the source and calculates the distance for all the 
