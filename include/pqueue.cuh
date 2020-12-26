@@ -1,6 +1,8 @@
 #ifndef PQUEUE__CUH
 #define PQUEUE__CUH
-
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
+#include <cuda.h>
 /*
 	THIS FILE PROVIDES FUNCTIONS TO IMPLEMENT A PRIORITY_QUEUE
 	this file works on an int array which is supposed to be heapified
@@ -23,7 +25,6 @@ __device__ void insert_GPU(int* heap, int &size, int item, int priority, int num
 __device__ void remove_GPU(int* heap, int &size, int index, int num_vertices);
 __device__ void getItem_GPU(int* heap, int size, int item, int& index, int& priority, int num_vertices);
 __device__ void makeHeap_GPU(int* heap, int&size, int num_vertices);
-__device__ void print_queue_GPU(int* heap, int &size, int num_vertices);
 __device__ int heuristic_GPU(int a);
 
 #endif
