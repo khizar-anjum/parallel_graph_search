@@ -8,7 +8,7 @@
 #include <device_launch_parameters.h>
 #include <cuda.h>
 
-int* dijkstra_par(graph &g, int src);
+int* dijkstra_par(graph &g, int src, int NUM_QUEUES);
 
 __global__ void insertKernelDijkstra(int* heap, int* size, int src_vertex, int priority, int num_vertices);
 __global__ void extractKernelDijkstra(int* heap, int* size, int* S, int* W, unsigned int* SWsize, int* num_connected_d, int* weight_arr_d,

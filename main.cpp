@@ -56,7 +56,7 @@ int main(){
 		begin_exec = std::chrono::steady_clock::now();
 		costs = bellmanford_par(g, 1, grids[i],64);
 		end_exec = std::chrono::steady_clock::now();
-		printf("For grids %d, it took a total of %d milliseconds\n", grids[i], std::chrono::duration_cast<std::chrono::milliseconds>(end_exec - begin_exec).count());
+		printf("For grids %d, it took a total of %d milliseconds\n", grids[i], static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(end_exec - begin_exec).count()));
 	}
 	return 0;
 }
