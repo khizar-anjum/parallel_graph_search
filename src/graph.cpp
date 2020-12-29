@@ -2,50 +2,34 @@
 #define GRAPH__CPP
 
 #include "graph.h"
+#include "rapidcsv.h"
 
 graph::graph(std::string filename){
 	// Expects a csv file format with edges describes in 3 column format
 	// 3 columns being SOURCE, TARGET, WEIGHT
 	// All the values should be ints
-
-	int i = 0;
- 	int num_cols = 3;
-	std::ifstream inputFile(filename);
- 	std::string line; 
- 	std::vector<int> from;
- 	std::vector<int> to;
- 	std::vector<int> weights;
  	std::vector<int> all_vertices;
 
-	while(std::getline(inputFile, line)){
-		std::istringstream ss(line);
-		while(getline(ss, line, ',')){
-			// using comma as a separator as its a csv file format
-			if(i == 0){ // its the SOURCE column
-				from.push_back(std::stoi(line));
-			}
-			else if(i == 1){ // its the TARGET column
-				to.push_back(std::stoi(line));
-			}
-			else{ // its the WEIGHT column
-				weights.push_back(std::stoi(line));
-			}
-			i = ++i % num_cols;
-		}
-	}
-	inputFile.close();
+ 	rapidcsv::Document doc(filename, rapidcsv::LabelParams(-1, -1));
 
+ 	std::vector<int> from = doc.GetColumn<int>(0);
+ 	std::vector<int> to = doc.GetColumn<int>(1);
+ 	std::vector<int> weights = doc.GetColumn<int>(2);
+ 	
 	// concatenate to get all the vertices
 	// thanks to https://stackoverflow.com/questions/3177241/what-is-the-best-way-to-concatenate-two-vectors/3177254
 	all_vertices.reserve(from.size() + to.size());
 	all_vertices.insert(all_vertices.end(), from.begin(), from.end());
 	all_vertices.insert(all_vertices.end(), to.begin(), to.end());
-
+	
 	//lets remove duplicates
 	//thanks to https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector
 	std::sort(all_vertices.begin(), all_vertices.end());
 	all_vertices.erase(std::unique(all_vertices.begin(), all_vertices.end()), all_vertices.end());
-
+	//sort the from vector
+	std::vector<int> from_sorted = from;
+	std::sort(from_sorted.begin(), from_sorted.end());
+	
 	//lets initialize the arrays
 	num_vertices = all_vertices.size();
 	num_edges = weights.size();
@@ -55,16 +39,22 @@ graph::graph(std::string filename){
 	connected_to = new int[num_edges];
 
 	//lets initialize the maps and the index and num_connected arrays
-	i = 0;
+	int i = 0;
 	for(int j = 0; j < all_vertices.size(); j++){
 		name_to_vertex.insert(std::pair<int, int>(all_vertices[j], j));
 		vertex_to_name.insert(std::pair<int, int>(j, all_vertices[j]));
 
 		index_arr[j] = i;
-		num_connected[j] = std::count(from.begin(), from.end(), all_vertices[j]);
-		i += num_connected[j];
+		num_connected[j] = 0;
+		while(true){
+			num_connected[j]++;
+			if(i < from.size() && from_sorted[i] != from_sorted[i+1]){
+				break;
+			}
+			i++;
+		}
+		i++;
 	}
-
 	//lets add values to the weights and connected to arrays
 	int localiterator[num_vertices] = {0};
 	int curr_index = 0;

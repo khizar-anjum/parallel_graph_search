@@ -17,11 +17,13 @@ int* bellmanford_seq(graph &g, int src){
 	costs[src_vertex] = 0;
 	int connected_from = 0;
 	int k = 1;
+	bool nochange = true;
 
 	//Repeating for |V| - 1 times 
 	for(int j = 0; j < g.num_vertices - 1; j++){
 		k = 1;
 		connected_from = 0;
+		nochange = true;
 		//Run through every edge and update the distances!
 		for(int i = 0; i < g.num_edges; i++){
 			// using the fact that from_vertices are sorted!
@@ -32,8 +34,12 @@ int* bellmanford_seq(graph &g, int src){
 			//lets see if we can update this
 			if(costs[g.connected_to[i]] > g.weight_arr[i] + costs[connected_from]){
 				costs[g.connected_to[i]] = g.weight_arr[i] + costs[connected_from];
+				nochange = false;
 			}
 			k++;
+		}
+		if(nochange){
+			break;
 		}
 	}
 	
