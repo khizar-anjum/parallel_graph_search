@@ -14,13 +14,13 @@ int heuristic(int a){
 
 int main(){
 	std::cout << "Welcome to Parallel Graph Search" << std::endl;
-	/*
+	
 	std::cout << "Enter Name of File: ";
 	char buf[256];
 	std::cin >> buf;
 	graph g(buf);
-	*/
-	graph g("data/USA-road-d.NY.csv");
+	
+	//graph g("data/USA-road-d.NY.csv");
 	//graph g("data/socdata_new.csv");
 	int* heap = new int[2*g.num_vertices];
 	int size = 0;

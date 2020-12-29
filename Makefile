@@ -19,6 +19,7 @@ OBJ_CU = $(patsubst %,$(ODIR)/%, $(_OBJ_CU))
 
 directories:
 	mkdir -p $(ODIR)
+	mkdir -p results
 
 $(ODIR)/%_cpu.o: $(SRC)/%.cpp
 	$(NVCC) --device-c -o $@ $^ $(FLAGS)
